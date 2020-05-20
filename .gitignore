@@ -1,0 +1,10 @@
+*.py*
+*.cpp
+*.js
+*.rb
+*.scala
+*.hs
+*.rs
+*.cs
+*.class
+.DS_Store

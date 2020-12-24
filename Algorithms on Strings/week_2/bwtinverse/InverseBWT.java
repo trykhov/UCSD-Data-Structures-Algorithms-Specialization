@@ -36,26 +36,46 @@ public class InverseBWT {
 
     String inverseBWT(String bwt) {
         StringBuilder result = new StringBuilder();
-        Node[] leftSide = new Node[bwt.length()];
+        Integer[] leftSide = new Integer[bwt.length()];
+        // create a count array to hold the indices of characters
+        LinkedList[] countArray = new LinkedList[4];
+        for(int i = 0; i < countArray.length; i++) {
+            countArray[i] = new LinkedList<Integer>();
+        }
+        // create a hashmap that maps the characters to the index
+        HashMap<Character, Integer> hashmap = new HashMap<Character, Integer>();
+        hashmap.put('A', 0);
+        hashmap.put('C', 1);
+        hashmap.put('G', 2);
+        hashmap.put('T', 3);
+        
         for(int i = 0; i < bwt.length(); i++) {
             char character = bwt.charAt(i);
-            Node node = new Node(character, i);
-            leftSide[i] = node;
-        }
-        // sort leftSide by character
-        Arrays.sort(leftSide, new Comparator<Node>() {
-            // @Override
-            public int compare(Node s1, Node s2) {
-                return Character.compare(s1.character, s2.character);
+            // fill the leftSide's first index
+            if(character == '$') {
+                leftSide[0] = i;
+            } else {
+                // put the index in the countArray stacks
+                int idx = hashmap.get(character);
+                countArray[idx].add(i);
             }
-        });
-        // write your code here
-        int nodeIdx = leftSide[0].idx;
-        for(int i = 0; i < bwt.length(); i++) {
-            char letter = leftSide[nodeIdx].character;
-            result.append(letter);
-            nodeIdx = leftSide[nodeIdx].idx;
         }
+        // start the leftSide index at 1 (0 is already filled)
+        int l = 1;
+        for(int i = 0; i < countArray.length; i++) {
+            LinkedList currQueue = countArray[i];
+            while(currQueue.size() > 0) {
+                leftSide[l++] = (Integer) currQueue.remove();
+            }
+        }
+
+        int idx = leftSide[0];
+        for(int i = 0; i < bwt.length(); i++) {
+            idx = leftSide[idx];
+            char letter = bwt.charAt(idx);
+            result.append(letter);
+        }
+        
         return result.toString();
     }
 

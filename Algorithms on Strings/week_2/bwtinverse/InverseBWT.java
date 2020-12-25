@@ -38,30 +38,26 @@ public class InverseBWT {
         StringBuilder result = new StringBuilder();
         Integer[] leftSide = new Integer[bwt.length()];
         // create a count array to hold the indices of characters
-        LinkedList[] countArray = new LinkedList[4];
+        LinkedList[] countArray = new LinkedList[5];
         for(int i = 0; i < countArray.length; i++) {
             countArray[i] = new LinkedList<Integer>();
         }
         // create a hashmap that maps the characters to the index
         HashMap<Character, Integer> hashmap = new HashMap<Character, Integer>();
-        hashmap.put('A', 0);
-        hashmap.put('C', 1);
-        hashmap.put('G', 2);
-        hashmap.put('T', 3);
-        
+        hashmap.put('$', 0);
+        hashmap.put('A', 1);
+        hashmap.put('C', 2);
+        hashmap.put('G', 3);
+        hashmap.put('T', 4);
+
         for(int i = 0; i < bwt.length(); i++) {
             char character = bwt.charAt(i);
-            // fill the leftSide's first index
-            if(character == '$') {
-                leftSide[0] = i;
-            } else {
-                // put the index in the countArray stacks
-                int idx = hashmap.get(character);
-                countArray[idx].add(i);
-            }
+            // put the index in the countArray stacks
+            int idx = hashmap.get(character);
+            countArray[idx].add(i);
         }
         // start the leftSide index at 1 (0 is already filled)
-        int l = 1;
+        int l = 0;
         for(int i = 0; i < countArray.length; i++) {
             LinkedList currQueue = countArray[i];
             while(currQueue.size() > 0) {
@@ -75,7 +71,7 @@ public class InverseBWT {
             char letter = bwt.charAt(idx);
             result.append(letter);
         }
-        
+
         return result.toString();
     }
 
